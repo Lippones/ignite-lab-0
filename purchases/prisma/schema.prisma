@@ -13,6 +13,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PurchaseStatus {
+  PENDING
+  APPROVED
+  FAILED
+}
+
 model Customer {
-  id String @id @default(uuid())
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+  purchases Purchase[]
+}
+
+model Product {
+  id    String @id @default(uuid())
+  title String
+  slug  String @unique
+
+  purchases Purchase[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Purchase {
+  id     String         @id @default(uuid())
+  status PurchaseStatus @default(PENDING)
+
+  Customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
