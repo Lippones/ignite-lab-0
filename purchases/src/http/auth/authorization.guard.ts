@@ -29,6 +29,7 @@ export class AuthorizationGuard implements CanActivate {
       audience: this.AUTH0_AUDIENCE,
       issuerBaseURL: `${this.AUTH0_DOMAIN}`,
       tokenSigningAlg: 'RS256',
+      jwksUri: `${this.AUTH0_DOMAIN}.well-known/jwks.json`,
     })
 
     return new Promise((resolve, reject) => {

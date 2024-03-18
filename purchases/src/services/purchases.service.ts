@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import slugify from 'slugify'
 import { PrismaService } from 'src/database/prisma/prisma.service'
 
-interface CreateProductRequest {
-  title: string
+interface CreatePurchaseRequest {
+  productId: string
+  customerId: string
 }
 
 @Injectable()
@@ -16,5 +16,24 @@ export class PurchasesService {
         createdAt: 'desc',
       },
     })
+  }
+
+  async createPurchase({ customerId, productId }: CreatePurchaseRequest) {
+    const product = await this.prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    })
+
+    if (!product) throw new Error('Product not found')
+
+    const purchase = await this.prisma.purchase.create({
+      data: {
+        customerId,
+        productId,
+      },
+    })
+
+    return purchase
   }
 }
