@@ -23,7 +23,7 @@ export class PurchaseResolver {
     private purchaseService: PurchasesService,
     private productsService: ProductsService,
     private customersService: CustomersService,
-  ) { }
+  ) {}
 
   @Query(() => [Purchase])
   @UseGuards(AuthorizationGuard)
@@ -44,6 +44,7 @@ export class PurchaseResolver {
     @Args('data') { productId }: CreatePurchaseInput,
     @CurrentUser() user: AuthUser,
   ) {
+    console.log('user:', user)
     const customer = await this.customersService.getCustomerByAuthUserId(
       user.sub,
     )
